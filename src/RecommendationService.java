@@ -1,6 +1,4 @@
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class RecommendationService {
@@ -31,26 +29,9 @@ public class RecommendationService {
         }
 
         // Sotiert absteigend
-        Collections.sort(recommendationsList, new Comparator<Recommendation>() {
-            @Override
-            public int compare(Recommendation o1, Recommendation o2) {
-                return Double.compare(o2.getSimilarity(), o1.getSimilarity());
-            }
-        });
-
-                //Nur die 5 ähnlichsten Songs oder die ganze List wenn < 5
-               int listSize = Math.min(5,recommendationsList.size());
-               List<Recommendation>  newRecommendation = new ArrayList<>();
-               for(int i = 0; i < listSize; i++){
-                   Recommendation r = recommendationsList.get(i);
-                   newRecommendation.add(r);
-
-               }
-
-
-
-
-        return newRecommendation.stream()
+        return recommendationsList.stream()
+                .sorted((r1, r2) -> Double.compare(r2.getSimilarity(), r1.getSimilarity()))
+                .limit(5)
                 .map(Recommendation::getSong)
                 .toList();
     }
