@@ -7,7 +7,8 @@
 
 ---
 
-<img width="1904" height="1044" alt="Bildschirmfoto 2026-06-23 um 03 04 05" src="https://github.com/user-attachments/assets/6b1a73e2-370a-4c23-b5ac-7fa88d7949e3" />
+<img width="1280" height="771" alt="Bildschirmfoto 2026-06-23 um 21 55 46" src="https://github.com/user-attachments/assets/2a23df1b-388c-4b28-ac35-5ae6a2c85983" />
+
 
 ---
 
