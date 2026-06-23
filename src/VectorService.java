@@ -36,7 +36,7 @@ public class VectorService {
         // Betrag b
         for (int i = 0; i < b.length; i++) {
             double value1 = b[i];
-            double interim = value1 *= value1;
+            double interim = value1 * value1;
             magnitudeB += interim;
         }
 

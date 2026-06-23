@@ -1,84 +1,58 @@
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Collections;
 import java.util.List;
-
 
 public class SongRepository {
 
-    HashMap<String, Song> songs = new HashMap<>();
-    VectorService vectorService = new VectorService();
+    /**
+     * Holt alle importierten Songs aus der SQLite-Datenbank und
+     * wandelt sie in echte Java-Song-Objekte um.
+     */
+    public List<Song> getAllSongs() {
+        List<Song> songs = new ArrayList<>();
+        String sql = "SELECT id, title, artist, genre, energy, danceability, valence, tempo, acousticness, instrumentalness FROM songs";
 
-    public SongRepository() {
-        addSong(new Song("Snooze", "SZA", Genre.RNB, 0.45, 0.55, 0.70, 78, 0.65, 0.10));
-        addSong(new Song("Good Days", "SZA", Genre.RNB, 0.50, 0.60, 0.80, 90, 0.55, 0.05));
-        addSong(new Song("Broken Clocks", "SZA", Genre.RNB, 0.55, 0.65, 0.75, 95, 0.45, 0.08));
-        addSong(new Song("Saturn", "SZA", Genre.RNB, 0.40, 0.50, 0.85, 72, 0.70, 0.15));
-        addSong(new Song("Nobody Gets Me", "SZA", Genre.RNB, 0.35, 0.40, 0.90, 68, 0.75, 0.05));
+        // Try-with-resources öffnet die DB-Verbindung und schließt sie danach automatisch
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
 
-        addSong(new Song("Session 32", "Summer Walker", Genre.RNB, 0.30, 0.45, 0.80, 70, 0.80, 0.05));
-        addSong(new Song("Girls Need Love", "Summer Walker", Genre.RNB, 0.55, 0.70, 0.75, 98, 0.40, 0.10));
-        addSong(new Song("Playing Games", "Summer Walker", Genre.RNB, 0.50, 0.65, 0.70, 92, 0.45, 0.08));
-        addSong(new Song("Come Thru", "Summer Walker", Genre.RNB, 0.45, 0.60, 0.85, 85, 0.50, 0.12));
-        addSong(new Song("Body", "Summer Walker", Genre.RNB, 0.60, 0.80, 0.65, 100, 0.35, 0.05));
+            // Wir gehen Zeile für Zeile durch die Ergebnisse der Datenbank
+            while (rs.next()) {
+                String title = rs.getString("title");
+                String artist = rs.getString("artist");
+                String genreStr = rs.getString("genre");
 
-        addSong(new Song("The Color Violet", "Tory Lanez", Genre.RNB, 0.65, 0.70, 0.75, 110, 0.30, 0.10));
-        addSong(new Song("Lady Of Namek", "Tory Lanez", Genre.RNB, 0.60, 0.75, 0.70, 108, 0.35, 0.08));
-        addSong(new Song("Hurts Me", "Tory Lanez", Genre.RNB, 0.50, 0.55, 0.80, 80, 0.60, 0.05));
-        addSong(new Song("Say It", "Tory Lanez", Genre.RNB, 0.55, 0.65, 0.78, 95, 0.45, 0.07));
-        addSong(new Song("LUV", "Tory Lanez", Genre.RNB, 0.70, 0.85, 0.60, 105, 0.40, 0.05));
+                double energy = rs.getDouble("energy");
+                double danceability = rs.getDouble("danceability");
+                double valence = rs.getDouble("valence");
+                double tempo = rs.getDouble("tempo");
+                double acousticness = rs.getDouble("acousticness");
+                double instrumentalness = rs.getDouble("instrumentalness");
 
-        addSong(new Song("Under The Influence", "Chris Brown", Genre.RNB, 0.80, 0.85, 0.70, 115, 0.35, 0.05));
-        addSong(new Song("No Guidance", "Chris Brown", Genre.RNB, 0.75, 0.80, 0.72, 98, 0.40, 0.05));
-        addSong(new Song("Back To Sleep", "Chris Brown", Genre.RNB, 0.60, 0.70, 0.68, 85, 0.50, 0.08));
-        addSong(new Song("Take You Down", "Chris Brown", Genre.RNB, 0.55, 0.60, 0.75, 90, 0.45, 0.05));
-        addSong(new Song("With You", "Chris Brown", Genre.RNB, 0.50, 0.55, 0.85, 88, 0.55, 0.05));
+                // Den Text aus der DB ("RNB", "HIPHOP", "POP") wieder in dein echtes Enum umwandeln
+                Genre genre = Genre.valueOf(genreStr);
 
-        addSong(new Song("Don't", "Bryson Tiller", Genre.RNB, 0.45, 0.60, 0.80, 75, 0.65, 0.05));
-        addSong(new Song("Exchange", "Bryson Tiller", Genre.RNB, 0.50, 0.65, 0.78, 80, 0.60, 0.05));
-        addSong(new Song("Right My Wrongs", "Bryson Tiller", Genre.RNB, 0.40, 0.50, 0.88, 70, 0.70, 0.08));
-        addSong(new Song("Sorrows", "Bryson Tiller", Genre.RNB, 0.35, 0.45, 0.90, 68, 0.75, 0.05));
-        addSong(new Song("Whatever She Wants", "Bryson Tiller", Genre.RNB, 0.60, 0.75, 0.65, 95, 0.50, 0.05));
+                // Ein neues Song-Objekt erstellen
+                Song song = new Song(title, artist, genre, energy, danceability, valence, tempo, acousticness, instrumentalness);
 
-        addSong(new Song("Call Out My Name", "The Weeknd", Genre.RNB, 0.50, 0.55, 0.90, 72, 0.60, 0.05));
-        addSong(new Song("Die For You", "The Weeknd", Genre.RNB, 0.55, 0.60, 0.88, 80, 0.55, 0.05));
-        addSong(new Song("After Hours", "The Weeknd", Genre.RNB, 0.65, 0.70, 0.80, 95, 0.50, 0.05));
-        addSong(new Song("Earned It", "The Weeknd", Genre.RNB, 0.60, 0.65, 0.85, 85, 0.45, 0.05));
-        addSong(new Song("Often", "The Weeknd", Genre.RNB, 0.70, 0.75, 0.75, 100, 0.40, 0.05));
+                // WICHTIG: Da der Song-Konstruktor intern eine neue zufällige UUID generiert,
+                // wir aber die feste ID aus der Datenbank behalten wollen, müssten wir theoretisch die ID setzen.
+                // Da deine ID in der Song-Klasse 'final' ist, nutzen wir die generierte UUID.
+                // Falls du die exakte ID aus der DB erzwingen willst, müsste das 'final' bei 'id' im Song entfernt werden.
 
-        addSong(new Song("Location", "Khalid", Genre.RNB, 0.45, 0.60, 0.80, 90, 0.55, 0.05));
-        addSong(new Song("Better", "Khalid", Genre.RNB, 0.50, 0.65, 0.78, 92, 0.50, 0.05));
-        addSong(new Song("Talk", "Khalid", Genre.RNB, 0.55, 0.70, 0.75, 100, 0.45, 0.05));
-        addSong(new Song("Young Dumb & Broke", "Khalid", Genre.RNB, 0.65, 0.80, 0.70, 105, 0.35, 0.05));
-        addSong(new Song("Saved", "Khalid", Genre.RNB, 0.40, 0.55, 0.85, 85, 0.60, 0.05));
+                songs.add(song);
+            }
 
-        addSong(new Song("Best Part", "Daniel Caesar", Genre.RNB, 0.35, 0.50, 0.92, 70, 0.80, 0.05));
-        addSong(new Song("Get You", "Daniel Caesar", Genre.RNB, 0.45, 0.60, 0.88, 78, 0.65, 0.05));
-        addSong(new Song("Japanese Denim", "Daniel Caesar", Genre.RNB, 0.40, 0.55, 0.90, 72, 0.75, 0.05));
-        addSong(new Song("Always", "Daniel Caesar", Genre.RNB, 0.30, 0.45, 0.95, 65, 0.85, 0.05));
-        addSong(new Song("Valentina", "Daniel Caesar", Genre.RNB, 0.50, 0.65, 0.80, 90, 0.60, 0.05));
+            System.out.println("Erfolgreich " + songs.size() + " Songs aus der SQLite-Datenbank geladen!");
+
+        } catch (SQLException e) {
+            System.err.println("Fehler beim Laden der Songs aus der Datenbank: " + e.getMessage());
+        }
+
+        return songs;
     }
-
-
-    public void addSong(Song song){
-        songs.put(song.getId(), song);
-        song.setVector(vectorService.toVector(song));
-    }
-
-    public void delete(Song song){
-        songs.remove(song.getId());
-    }
-
-    public ArrayList<Song> getAllSongs(){
-        return new ArrayList<>(songs.values());
-    }
-
-    public Song getRandomSong(){
-        List<Song> list = new ArrayList<>(songs.values());
-        Collections.shuffle(list);
-        return list.getFirst();
-
-    }
-
-
 }
