@@ -7,6 +7,7 @@ import java.util.List;
 public class SongRepository {
 
     HashMap<String, Song> songs = new HashMap<>();
+    VectorService vectorService = new VectorService();
 
     public SongRepository() {
         addSong(new Song("Snooze", "SZA", Genre.RNB, 0.45, 0.55, 0.70, 78, 0.65, 0.10));
@@ -61,6 +62,7 @@ public class SongRepository {
 
     public void addSong(Song song){
         songs.put(song.getId(), song);
+        song.setVector(vectorService.toVector(song));
     }
 
     public void delete(Song song){

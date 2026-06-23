@@ -22,7 +22,7 @@ public class RecommendationService {
         //Fügt die verglichenen songs in Liste hinzu
         for(Song song: repository.getAllSongs()){
             if(song.getId().equals(inputSong.getId())) continue;
-            double[] b = vectorService.toVector(song);
+            double[] b = song.getVector();
             if (inputSong.getGenre() == song.getGenre()){
                 double similarity = vectorService.cosineSimilarity(a,b);
                 Recommendation recommendation = new Recommendation(song, similarity);

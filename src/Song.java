@@ -2,6 +2,7 @@ import java.util.UUID;
 
 public class Song {
 
+    private double[] vector;
     private final String title;
     private final String artist;
     private final Genre genre;
@@ -26,6 +27,10 @@ public class Song {
         this.acousticness = acousticness;
         this.instrumentalness = instrumentalness;
         this.id = UUID.randomUUID().toString();
+    }
+
+    public double[] getVector() {
+        return vector;
     }
 
     public String getTitle() {
@@ -66,6 +71,10 @@ public class Song {
 
     public double getInstrumentalness() {
         return instrumentalness;
+    }
+
+    public void setVector(double[] vector) {
+        this.vector = vector;
     }
 
 
