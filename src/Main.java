@@ -10,6 +10,19 @@ void main() {
             0.65, 0.70, 0.75, 85, 0.45, 0.05
     );
 
+
+    Song noGuidance = new Song(
+            "No Guidance",
+            "Chris Brown, Drake",
+            Genre.RNB,
+            454,
+            696,
+            136,
+            92.928,
+            123,
+            0.0
+    );
+
     Song chopperCity = new Song(
             "Chopper City",
             "NBA YoungBoy",
@@ -35,7 +48,14 @@ void main() {
             0.25, 0.03
     );
 
-    System.out.println("\nSuche Top 5 Empfehlungen in der Datenbank für: " + yukon + "...\n");
+    Song snooze = new Song(
+            "Snooze",
+            "SZA",
+            Genre.RNB,
+            0.45, 0.52, 0.78, 0.32, 0.05, 0.58
+    );
+
+    System.out.println("\nSuche Top 5 Empfehlungen in der Datenbank für: " + noGuidance + "...\n");
 
     List<Song> result = recommendationService.recommend(yukon);
 

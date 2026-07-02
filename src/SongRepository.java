@@ -39,10 +39,6 @@ public class SongRepository {
                 // Ein neues Song-Objekt erstellen
                 Song song = new Song(title, artist, genre, energy, danceability, valence, tempo, acousticness, instrumentalness);
 
-                // WICHTIG: Da der Song-Konstruktor intern eine neue zufällige UUID generiert,
-                // wir aber die feste ID aus der Datenbank behalten wollen, müssten wir theoretisch die ID setzen.
-                // Da deine ID in der Song-Klasse 'final' ist, nutzen wir die generierte UUID.
-                // Falls du die exakte ID aus der DB erzwingen willst, müsste das 'final' bei 'id' im Song entfernt werden.
 
                 songs.add(song);
             }
